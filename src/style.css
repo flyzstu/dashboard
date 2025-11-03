@@ -1,0 +1,189 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Roboto:wght@400;500;700&display=swap');
+
+:root {
+  --bg: #0b1220;
+  --bg-2: #0f1a2f;
+  --panel: rgba(22, 33, 60, 0.7);
+  --panel-border: rgba(116, 189, 255, 0.25);
+  --text: #e8f1ff;
+  --muted: #89a1c1;
+  --primary: #4cc9f0;
+  --accent: #80ffdb;
+  --warn: #ffbf69;
+  --danger: #ff4d6d;
+  --success: #2dd4bf;
+}
+
+* { box-sizing: border-box; }
+html, body, #app { height: 100%; }
+body {
+  margin: 0;
+  background: radial-gradient(1000px 600px at 50% -200px, #18304e 0%, var(--bg) 60%), var(--bg);
+  color: var(--text);
+  font-family: 'Roboto', system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif;
+}
+
+.app-container {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 80px 1fr;
+  gap: 16px;
+  padding: 16px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: linear-gradient(180deg, rgba(41, 61, 102, 0.35), rgba(20, 32, 58, 0.5));
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25) inset, 0 2px 12px rgba(0,0,0,0.25);
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 28px;
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.clock {
+  font-family: 'Rajdhani', monospace;
+  font-size: 18px;
+  letter-spacing: 1px;
+  color: var(--accent);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1.2fr 2fr 1.2fr;
+  grid-auto-rows: minmax(120px, auto);
+  gap: 16px;
+  min-height: 0;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  padding: 12px;
+  backdrop-filter: blur(6px);
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.panel-title {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.panel-subtitle { font-size: 12px; color: var(--muted); }
+
+.content { flex: 1; min-height: 0; }
+
+.kpi {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  border: 1px solid currentColor;
+}
+
+.badge.success { color: var(--success); }
+.badge.warn { color: var(--warn); }
+.badge.danger { color: var(--danger); }
+
+@media (max-width: 1200px) {
+  .grid { grid-template-columns: 1fr; }
+}
+
+.card-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 700px) {
+  .card-list { grid-template-columns: 1fr; }
+}
+
+.server-card {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px 12px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.server-name { font-weight: 600; }
+.server-metrics { font-size: 12px; color: var(--muted); }
+.server-status { align-self: center; }
+
+.progress {
+  position: relative;
+  height: 6px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.08);
+  overflow: hidden;
+}
+.progress > span {
+  position: absolute; left: 0; top: 0; bottom: 0;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  border-radius: 6px;
+}
+
+.alert-list { list-style: none; margin: 0; padding: 0; }
+.alert-item {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  gap: 8px;
+  padding: 8px 6px;
+  border-bottom: 1px dashed rgba(255,255,255,0.06);
+}
+.alert-item .level {
+  font-size: 12px; font-weight: 600;
+}
+.alert-item .msg { color: #ccd8ee; }
+.alert-item .time { color: var(--muted); font-size: 12px; }
+
+.level-info { color: var(--primary); }
+.level-warn { color: var(--warn); }
+.level-critical { color: var(--danger); animation: pulse 1.2s infinite; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .4; }
+}
+
+.chart { width: 100%; height: 100%; }
+
+.footer-note { color: var(--muted); font-size: 12px; text-align: right; margin-top: 4px; }
