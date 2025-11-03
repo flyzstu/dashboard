@@ -1,6 +1,6 @@
 import EChart from './EChart.js';
 
-const { ref, computed, onMounted, onBeforeUnmount } = Vue;
+const { ref, computed, onMounted, onBeforeUnmount } = window.Vue;
 
 function gaugeOption(valueRef, name, colors) {
   return computed(() => ({

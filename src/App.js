@@ -4,7 +4,7 @@ import AlertsPanel from './components/AlertsPanel.js';
 import ServerStatus from './components/ServerStatus.js';
 import DiskUsage from './components/DiskUsage.js';
 
-const { ref, onMounted, onBeforeUnmount } = Vue;
+const { ref, onMounted, onBeforeUnmount } = window.Vue;
 
 export default {
   name: 'App',

@@ -1,5 +1,5 @@
 import App from './App.js';
 
-const { createApp } = Vue;
+const { createApp } = window.Vue;
 
 createApp(App).mount('#app');

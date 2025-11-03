@@ -1,4 +1,4 @@
-const { ref, computed, onMounted, onBeforeUnmount } = Vue;
+const { ref, computed, onMounted, onBeforeUnmount } = window.Vue;
 
 function randomStatus() {
   const r = Math.random();

@@ -1,6 +1,6 @@
 import EChart from './EChart.js';
 
-const { ref, computed, onMounted, onBeforeUnmount } = Vue;
+const { ref, computed, onMounted, onBeforeUnmount } = window.Vue;
 
 function jitter(value) {
   let next = value + Math.round((Math.random() - 0.5) * 6);

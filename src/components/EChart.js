@@ -1,4 +1,5 @@
-const { ref, computed, onMounted, onBeforeUnmount, watch } = Vue;
+const { ref, computed, onMounted, onBeforeUnmount, watch } = window.Vue;
+const echartsInstance = window.echarts;
 
 export default {
   name: 'EChart',
@@ -26,7 +27,11 @@ export default {
     };
 
     onMounted(() => {
-      chart = echarts.init(chartEl.value, undefined, { renderer: props.renderer });
+      if (!echartsInstance) {
+        console.warn('ECharts library is not loaded.');
+        return;
+      }
+      chart = echartsInstance.init(chartEl.value, undefined, { renderer: props.renderer });
       render();
       window.addEventListener('resize', resize);
     });

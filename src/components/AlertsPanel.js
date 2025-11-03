@@ -1,4 +1,4 @@
-const { ref, computed, onMounted, onBeforeUnmount } = Vue;
+const { ref, computed, onMounted, onBeforeUnmount } = window.Vue;
 
 const samples = [
   'CPU 使用率超过阈值',
@@ -30,8 +30,9 @@ function randomLevel() {
 }
 
 function randomId() {
-  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-    return crypto.randomUUID();
+  const cryptoObj = globalThis.crypto;
+  if (cryptoObj && typeof cryptoObj.randomUUID === 'function') {
+    return cryptoObj.randomUUID();
   }
   return Math.random().toString(36).slice(2) + Date.now().toString(36);
 }
