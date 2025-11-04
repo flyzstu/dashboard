@@ -1,6 +1,7 @@
 import EChart from './EChart.js';
+import { useDashboardStore } from '../services/dashboardStore.js';
 
-const { ref, computed, onMounted, onBeforeUnmount } = window.Vue;
+const { computed } = window.Vue;
 
 function gaugeOption(valueRef, name, colors) {
   return computed(() => ({
@@ -51,11 +52,6 @@ function gaugeOption(valueRef, name, colors) {
   }));
 }
 
-function jitter(value) {
-  const n = value + Math.round((Math.random() - 0.5) * 10);
-  return Math.max(3, Math.min(97, n));
-}
-
 export default {
   name: 'ResourceGauges',
   components: { EChart },
@@ -67,26 +63,15 @@ export default {
     </div>
   `,
   setup() {
-    const cpu = ref(28);
-    const mem = ref(46);
-    const disk = ref(62);
-    let timer = null;
+    const store = useDashboardStore();
 
-    const cpuOption = gaugeOption(cpu, 'CPU', ['#2dd4bf', '#4cc9f0', '#ff4d6d']);
-    const memOption = gaugeOption(mem, '内存', ['#80ffdb', '#4cc9f0', '#ffbf69']);
-    const diskOption = gaugeOption(disk, '磁盘', ['#34d399', '#60a5fa', '#f43f5e']);
+    const cpuValue = computed(() => store.resourceGauges?.cpu ?? 0);
+    const memValue = computed(() => store.resourceGauges?.mem ?? 0);
+    const diskValue = computed(() => store.resourceGauges?.disk ?? 0);
 
-    onMounted(() => {
-      timer = setInterval(() => {
-        cpu.value = jitter(cpu.value);
-        mem.value = jitter(mem.value);
-        disk.value = jitter(disk.value);
-      }, 2000);
-    });
-
-    onBeforeUnmount(() => {
-      if (timer) clearInterval(timer);
-    });
+    const cpuOption = gaugeOption(cpuValue, 'CPU', ['#2dd4bf', '#4cc9f0', '#ff4d6d']);
+    const memOption = gaugeOption(memValue, '内存', ['#80ffdb', '#4cc9f0', '#ffbf69']);
+    const diskOption = gaugeOption(diskValue, '磁盘', ['#34d399', '#60a5fa', '#f43f5e']);
 
     return {
       cpuOption,

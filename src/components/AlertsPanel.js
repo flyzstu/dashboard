@@ -1,41 +1,6 @@
-const { ref, computed, onMounted, onBeforeUnmount } = window.Vue;
+import { useDashboardStore } from '../services/dashboardStore.js';
 
-const samples = [
-  'CPU 使用率超过阈值',
-  '磁盘空间不足 10%',
-  '网络延迟升高',
-  '内存占用异常',
-  '服务重启成功',
-  '检测到连接中断',
-  '应用响应超时',
-  'DNS 解析失败',
-  '负载均衡异常',
-  '写入 IO 飙升',
-];
-
-function pad(value) {
-  return String(value).padStart(2, '0');
-}
-
-function nowStr() {
-  const d = new Date();
-  return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
-}
-
-function randomLevel() {
-  const r = Math.random();
-  if (r < 0.15) return 'critical';
-  if (r < 0.45) return 'warn';
-  return 'info';
-}
-
-function randomId() {
-  const cryptoObj = globalThis.crypto;
-  if (cryptoObj && typeof cryptoObj.randomUUID === 'function') {
-    return cryptoObj.randomUUID();
-  }
-  return Math.random().toString(36).slice(2) + Date.now().toString(36);
-}
+const { computed } = window.Vue;
 
 export default {
   name: 'AlertsPanel',
@@ -51,31 +16,9 @@ export default {
     </div>
   `,
   setup() {
-    const alerts = ref([]);
-    let timer = null;
+    const store = useDashboardStore();
 
-    function pushAlert() {
-      alerts.value.unshift({
-        id: randomId(),
-        level: randomLevel(),
-        message: samples[Math.floor(Math.random() * samples.length)],
-        time: nowStr(),
-      });
-      if (alerts.value.length > 50) alerts.value.pop();
-    }
-
-    onMounted(() => {
-      for (let i = 0; i < 8; i += 1) pushAlert();
-      timer = setInterval(() => {
-        const bursts = Math.random() < 0.2 ? 2 : 1;
-        for (let i = 0; i < bursts; i += 1) pushAlert();
-      }, 3000);
-    });
-
-    onBeforeUnmount(() => {
-      if (timer) clearInterval(timer);
-    });
-
+    const alerts = computed(() => (Array.isArray(store.alerts) ? store.alerts : []));
     const displayAlerts = computed(() => alerts.value.slice(0, 10));
 
     const levelClass = (level) => (level === 'critical' ? 'level-critical' : level === 'warn' ? 'level-warn' : 'level-info');
