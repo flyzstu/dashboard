@@ -1,15 +1,6 @@
-const { ref, computed, onMounted, onBeforeUnmount } = window.Vue;
+import { useDashboardStore } from '../services/dashboardStore.js';
 
-function randomStatus() {
-  const r = Math.random();
-  if (r < 0.12) return 'offline';
-  if (r < 0.3) return 'warning';
-  return 'online';
-}
-
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
-}
+const { computed } = window.Vue;
 
 export default {
   name: 'ServerStatus',
@@ -32,36 +23,14 @@ export default {
     </div>
   `,
   setup() {
-    const servers = ref([]);
-    let timer = null;
+    const store = useDashboardStore();
 
-    function tick() {
-      servers.value = servers.value.map((server) => ({
-        ...server,
-        status: Math.random() < 0.2 ? randomStatus() : server.status,
-        cpu: clamp(Math.round(server.cpu + (Math.random() - 0.5) * 15), 1, 99),
-        mem: clamp(Math.round(server.mem + (Math.random() - 0.5) * 12), 1, 99),
-      }));
-    }
-
-    onMounted(() => {
-      servers.value = Array.from({ length: 8 }).map((_, index) => ({
-        id: index + 1,
-        name: `Server-${String(index + 1).padStart(2, '0')}`,
-        status: randomStatus(),
-        cpu: 20 + Math.round(Math.random() * 60),
-        mem: 20 + Math.round(Math.random() * 60),
-      }));
-      timer = setInterval(tick, 2500);
-    });
-
-    onBeforeUnmount(() => {
-      if (timer) clearInterval(timer);
-    });
+    const servers = computed(() => (Array.isArray(store.serverStatus) ? store.serverStatus : []));
 
     const onlineRate = computed(() => {
-      const total = servers.value.length;
-      const online = servers.value.filter((server) => server.status === 'online').length;
+      const list = servers.value;
+      const total = list.length;
+      const online = list.filter((server) => server.status === 'online').length;
       return total ? Math.round((online / total) * 100) : 0;
     });
 

@@ -57,15 +57,27 @@ npm run preview
 ## 项目结构
 ```text
 .
-├── index.html              # 入口 HTML，加载全局 Vue 与 ECharts CDN
-├── package.json            # 项目信息与脚本命令
-├── package-lock.json       # 锁定依赖版本
-├── vite.config.js          # Vite 配置
+├── docs
+│   └── data-integration.md     # 真实数据接入指南
+├── index.html                  # 入口 HTML，加载全局 Vue 与 ECharts CDN
+├── package.json                # 项目信息与脚本命令
+├── package-lock.json           # 锁定依赖版本
+├── vite.config.js              # Vite 配置
 └── src
-    ├── main.js             # 应用入口，挂载 Vue 实例
-    ├── App.js              # 根组件，定义页面布局
-    ├── style.css           # 全局样式与主题
-    └── components          # 功能组件目录
+    ├── config
+    │   └── dataSource.js       # 数据源类型及参数解析
+    ├── services
+    │   ├── adapters            # 各类数据源适配器
+    │   │   ├── randomAdapter.js
+    │   │   ├── restAdapter.js
+    │   │   └── websocketAdapter.js
+    │   ├── dashboardStore.js   # 全局响应式数据仓库
+    │   ├── dataSourceManager.js # 数据源调度管理
+    │   └── snapshot.js         # 快照归一化工具
+    ├── main.js                 # 应用入口，挂载 Vue 实例
+    ├── App.js                  # 根组件，定义页面布局
+    ├── style.css               # 全局样式与主题
+    └── components              # 功能组件目录
         ├── AlertsPanel.js      # 告警列表
         ├── DiskUsage.js        # 磁盘使用柱状图
         ├── EChart.js           # ECharts 通用封装
@@ -73,6 +85,9 @@ npm run preview
         ├── ResourceGauges.js   # CPU/内存/磁盘仪表
         └── ServerStatus.js     # 服务器状态卡片
 ```
+
+## 真实数据接入
+如需接入真实数据，请查阅 [docs/data-integration.md](./docs/data-integration.md)，其中提供了数据格式规范、配置方法以及 REST/WebSocket 对接示例。
 
 ## 部署说明（GitHub Pages 示例）
 1. 执行 `npm run build`，生成 `dist/` 目录。

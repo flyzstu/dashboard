@@ -1,12 +1,7 @@
 import EChart from './EChart.js';
+import { useDashboardStore } from '../services/dashboardStore.js';
 
-const { ref, computed, onMounted, onBeforeUnmount } = window.Vue;
-
-function jitter(value) {
-  let next = value + Math.round((Math.random() - 0.5) * 6);
-  next = Math.max(5, Math.min(95, next));
-  return next;
-}
+const { computed } = window.Vue;
 
 export default {
   name: 'DiskUsage',
@@ -15,58 +10,52 @@ export default {
     <EChart :option="option" height="260px" />
   `,
   setup() {
-    const labels = ref(['/data', '/db', '/logs', '/backup', '/tmp']);
-    const used = ref([72, 58, 83, 45, 38]);
-    let timer = null;
+    const store = useDashboardStore();
 
-    const option = computed(() => ({
-      grid: { left: 48, right: 16, top: 16, bottom: 24 },
-      xAxis: {
-        type: 'category',
-        data: labels.value,
-        axisLabel: { color: '#a9c2e8' },
-        axisLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } },
-      },
-      yAxis: {
-        type: 'value',
-        name: '%',
-        axisLabel: { color: '#a9c2e8' },
-        splitLine: { lineStyle: { color: 'rgba(255,255,255,0.08)' } },
-      },
-      tooltip: { trigger: 'axis' },
-      series: [
-        {
-          type: 'bar',
-          data: used.value,
-          barWidth: 18,
-          itemStyle: {
-            color: {
-              type: 'linear',
-              x: 0,
-              y: 0,
-              x2: 0,
-              y2: 1,
-              colorStops: [
-                { offset: 0, color: '#4cc9f0' },
-                { offset: 1, color: 'rgba(76,201,240,0.35)' },
-              ],
-            },
-          },
-          label: { show: true, position: 'top', color: '#cfe6ff', formatter: '{c}%' },
+    const option = computed(() => {
+      const labels = Array.isArray(store.diskUsage?.labels) ? store.diskUsage.labels : [];
+      const values = Array.isArray(store.diskUsage?.used) ? store.diskUsage.used : [];
+      const dataset = labels.length
+        ? labels.map((label, index) => ({ label, value: values[index] ?? 0 }))
+        : [{ label: '-', value: 0 }];
+
+      return {
+        grid: { left: 48, right: 16, top: 16, bottom: 24 },
+        xAxis: {
+          type: 'category',
+          data: dataset.map((item) => item.label),
+          axisLabel: { color: '#a9c2e8' },
+          axisLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } },
         },
-      ],
-    }));
-
-    function tick() {
-      used.value = used.value.map((value) => jitter(value));
-    }
-
-    onMounted(() => {
-      timer = setInterval(tick, 2500);
-    });
-
-    onBeforeUnmount(() => {
-      if (timer) clearInterval(timer);
+        yAxis: {
+          type: 'value',
+          name: '%',
+          axisLabel: { color: '#a9c2e8' },
+          splitLine: { lineStyle: { color: 'rgba(255,255,255,0.08)' } },
+        },
+        tooltip: { trigger: 'axis' },
+        series: [
+          {
+            type: 'bar',
+            data: dataset.map((item) => item.value),
+            barWidth: 18,
+            itemStyle: {
+              color: {
+                type: 'linear',
+                x: 0,
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [
+                  { offset: 0, color: '#4cc9f0' },
+                  { offset: 1, color: 'rgba(76,201,240,0.35)' },
+                ],
+              },
+            },
+            label: { show: true, position: 'top', color: '#cfe6ff', formatter: '{c}%' },
+          },
+        ],
+      };
     });
 
     return {
